@@ -1,0 +1,59 @@
+{
+  "name": "redux-cookies-middleware",
+  "version": "0.0.1",
+  "description": "redux-cookies-middleware is a redux middleware which watches for changes in redux state & store them to browser cookie.",
+  "keywords": [
+    "redux",
+    "cookies",
+    "middleware",
+    "react"
+  ],
+  "main": "dist/index.js",
+  "homepage": "https://github.com/grofers/redux-cookies-middleware",
+  "bugs": {
+    "url": "https://github.com/grofers/redux-cookies-middleware/issues",
+    "email": "veeteshjain@gmail.com"
+  },
+  "license": "MIT",
+  "author": "VeeteshJain <veeteshjain@gmail.com> (https://github.com/VeeteshJain)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grofers/redux-cookies-middleware.git"
+  },
+  "scripts": {
+    "clear:dist": "rm -rf dist && mkdir dist",
+    "build": "npm run clear:dist && babel src --out-dir dist --source-maps",
+    "postinstall": "npm run build",
+    "test": "karma start karma.conf.js --log-level debug",
+    "lint": "eslint . --ext .js --ext .jsx -f node_modules/eslint-detailed-reporter/lib/detailed.js -o ./eslint/report.html"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^3.3.1",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-detailed-reporter": "^0.7.2",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^1.14.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.1.2",
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.6.0",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.4",
+    "redux": "^3.7.2",
+    "webpack": "^3.3.0"
+  },
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "cookie": "^0.3.1"
+  }
+}
