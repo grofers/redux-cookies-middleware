@@ -1,0 +1,6 @@
+**/dist/**
+**/node_modules/**
+**/coverage/**
+**/eslint/**
+webpack.config.js
+karma.conf.js
