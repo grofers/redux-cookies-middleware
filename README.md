@@ -111,6 +111,15 @@ const persistCookies = {
 
 ## custom options
 
+```
+const customOptions = {
+    logger,
+    setCookie,
+    defaultEqualityCheck,
+    defaultDeleteCheck,
+};
+```
+
 #### logger(message)
 * default logger is ```console.error```.
 * redux-cookies-middleware use this to report error like 'state not found at store.getState().foo.bar'.
