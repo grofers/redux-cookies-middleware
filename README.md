@@ -1,13 +1,13 @@
 # redux-cookies-middleware
 
-redux-cookies-middleware is a Redux middleware which watches for changes in Redux state &amp; stores them in browser cookie.
+Redux middleware to syncs a subset of Redux store to Browser cookies.
 
 
 ## How to install
 
-```npm i redux-cookies-middleware --save``` or
+```yarn add redux-cookies-middleware``` or
 
-```yarn add redux-cookies-middleware```
+```npm i redux-cookies-middleware --save```
 
 
 ## How to use
@@ -70,30 +70,30 @@ reduxCookiesMiddleware(persistCookies, customOptions);
 
 ## getStateWithCookies(preloadedState, persistCookies, [getCookie])
 
-preloadedState
+#### preloadedState
 * initial store state
 
-getCookie
+#### getCookie
 * @type function(cookieName, [cookieString])
 * cookieString default value is ```document.cookie```.
 
 
 ## persistCookies option
 
-path_to_state_in_store
+#### path_to_state_in_store
 * is dot seprated state accessor eg. ```'data.ui.cart', 'data.auth.accessToken', 'data.cart' ...```
 
-name
+#### name
 * @isMandatory
 * @type String
 * redux-cookies-middleware use this name as cookie name.
 
-equalityCheck
+#### equalityCheck
 * @type function(oldVal, newVal)
 * @return boolean true|false
 * redux-cookies-middleware use this to know equality condition else it will use defaultEqualityCheck.
 
-deleteCheck
+#### deleteCheck
 * @type function(value)
 * @return boolean true|false
 * redux-cookies-middleware use this to know delete condition else it will use defaultDeleteCheck.
@@ -101,13 +101,13 @@ deleteCheck
 
 ## custom options
 
-logger
+#### logger
 * @type function(message)
 * @default console.error
 * redux-cookies-middleware use this to tell error eg. 'state not found at store.getState().auth.accessToken'
 * you can use this function to capture errors occured inside redux-cookies-middleware & log then to sentry or any custom database.
 
-setCookie
+#### setCookie
 * @type function(cookieName, cookieValue, expiryEpoch)
 * @typeof cookieName String
 * @typeof cookieValue String
@@ -116,13 +116,13 @@ setCookie
 * provide custom setCookie implementation when you want to control the versoning of cookies or having some custom set cookie implementation logic.
 * redux-cookies-middleware will call setCookie with 2 arguments to set a cookie. eg. ```setCookie('cookie_name', 'cookie_value')``` and will call with 3 arguments to delete cookie eg. ```setCookie('cookie_name', 'cookie_value', 0)```
 
-defaultEqualityCheck
+#### defaultEqualityCheck
 * @type function(oldVal, newVal)
 * @return boolean true|false
 * @default shallow comparision b/w oldVal & newVal.
 * redux-cookies-middleware use this to determine whether oldVal & newVal are equal you can use lodash.isEqual for deep comparison or you can write one of your own.
 
-defaultDeleteCheck
+#### defaultDeleteCheck
 * @type function(value)
 * @return boolean true|false
 * @default value should not be undefined
