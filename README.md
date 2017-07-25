@@ -1,13 +1,13 @@
 # redux-cookies-middleware
 
-redux-cookies-middleware is a Redux middleware which watches for changes in Redux state &amp; stores them in browser cookie.
+Redux middleware to syncs a subset of Redux store to Browser cookies.
 
 
 ## How to install
 
-```npm i redux-cookies-middleware --save``` or
+```yarn add redux-cookies-middleware``` or
 
-```yarn add redux-cookies-middleware```
+```npm i redux-cookies-middleware --save```
 
 
 ## How to use
@@ -70,63 +70,90 @@ reduxCookiesMiddleware(persistCookies, customOptions);
 
 ## getStateWithCookies(preloadedState, persistCookies, [getCookie])
 
-preloadedState
-* initial store state
+#### [preloadedState](http://redux.js.org/docs/recipes/reducers/InitializingState.html#initializing-state)
+* initial Redux store state.
 
-getCookie
-* @type function(cookieName, [cookieString])
-* cookieString default value is ```document.cookie```.
+#### getCookie(cookieName, [cookieString])
+* return cookie value.
+* by Default, cookieString is ```document.cookie```.
 
 
 ## persistCookies option
 
-path_to_state_in_store
-* is dot seprated state accessor eg. ```'data.ui.cart', 'data.auth.accessToken', 'data.cart' ...```
+```
+const persistCookies = {
+    <path_to_state_in_store>: {
+        name: <cookie_name>,
+        equalityCheck,
+        deleteCheck
+    }
+};
+```
 
-name
+#### path_to_state_in_store
+* is dot seprated state accessor eg. ```'data.foo.bar'```, ```'data.foo'```.
+
+#### name
+* redux-cookies-middleware use this as cookie name.
 * @isMandatory
 * @type String
-* redux-cookies-middleware use this name as cookie name.
 
-equalityCheck
-* @type function(oldVal, newVal)
+#### equalityCheck(oldVal, newVal)
 * @return boolean true|false
-* redux-cookies-middleware use this to know equality condition else it will use defaultEqualityCheck.
+* to verify does oldVal & newVal are equal or not.
+* if not specified then defaultEqualityCheck will be used which does an shallow comparison of values.
 
-deleteCheck
-* @type function(value)
+#### deleteCheck(value)
 * @return boolean true|false
-* redux-cookies-middleware use this to know delete condition else it will use defaultDeleteCheck.
+* for what value redux-cookies-middleware should delete the cookie.
+* if not specified then defaultDeleteCheck will be used which check for ```typeof value === 'undefined'```.
 
 
 ## custom options
 
-logger
-* @type function(message)
-* @default console.error
-* redux-cookies-middleware use this to tell error eg. 'state not found at store.getState().auth.accessToken'
-* you can use this function to capture errors occured inside redux-cookies-middleware & log then to sentry or any custom database.
+```
+const customOptions = {
+    logger,
+    setCookie,
+    defaultEqualityCheck,
+    defaultDeleteCheck,
+};
+```
 
-setCookie
-* @type function(cookieName, cookieValue, expiryEpoch)
-* @typeof cookieName String
-* @typeof cookieValue String
-* @typeof expiryEpoch Number
-* @default value of expiryEpoch is 365 * 24 * 60 * 60 * 1000 i.e. an year.
-* provide custom setCookie implementation when you want to control the versoning of cookies or having some custom set cookie implementation logic.
-* redux-cookies-middleware will call setCookie with 2 arguments to set a cookie. eg. ```setCookie('cookie_name', 'cookie_value')``` and will call with 3 arguments to delete cookie eg. ```setCookie('cookie_name', 'cookie_value', 0)```
+#### logger(message)
+* default logger is ```console.error```.
+* redux-cookies-middleware use this to report error like 'state not found at store.getState().foo.bar'.
+* use this function to capture error occured inside redux-cookies-middleware.
 
-defaultEqualityCheck
-* @type function(oldVal, newVal)
+#### setCookie(cookieName, cookieValue, [expiryEpoch])
+* when state changed setCookie is called, use this function to provide custom implementation for setCookie as per your application.
+* ```setCookie('cookie_name', 'cookie_value')``` called like this to set a cookie.
+* ```setCookie('cookie_name', 'cookie_value', 0)``` called like this to delete a cookie.
+* cookieName & cookieValue is of type String.
+* expiryEpoch is of type Number with default value ```365 * 24 * 60 * 60 * 1000 = 31,536,000,000``` i.e. an year.
+```
+const setCookie = (cookieName, cookieValue, expiryEpoch = (365 * 24 * 60 * 60 * 1000)) => {
+    const expiryDate = new Date(expiryEpoch);
+    const cookieString = [
+        `${cookieName}=${cookieValue}`,
+        `expires=${expiryDate.toUTCString()}`,
+        'path=/'
+    ].join(';');
+
+    document.cookie = cookieString;
+};
+```
+
+#### defaultEqualityCheck(oldVal, newVal)
+* to verify does oldVal & newVal are equal or not.
 * @return boolean true|false
-* @default shallow comparision b/w oldVal & newVal.
-* redux-cookies-middleware use this to determine whether oldVal & newVal are equal you can use lodash.isEqual for deep comparison or you can write one of your own.
+* @default shallow comparision b/w oldVal & newVal i.e. ```oldVal === newVal```.
+* you can use ```lodash.isEqual``` for deep comparison of values or you can write one of your own.
 
-defaultDeleteCheck
-* @type function(value)
+#### defaultDeleteCheck(value)
+* to know when to delete some cookie.
 * @return boolean true|false
-* @default value should not be undefined
-* redux-cookies-middleware use this to determine when to delete some cookie.
+* @default value condition is ```typeof value === 'undefined'```.
 
 
 ## How to Contribute
