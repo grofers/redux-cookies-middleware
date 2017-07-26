@@ -2,140 +2,214 @@
 
 redux-cookies-middleware is a Redux middleware which watches for changes in Redux state &amp; stores them in browser cookie.
 
-
-## How to install
-
-```npm i redux-cookies-middleware --save``` or
+## Installation
 
 ```yarn add redux-cookies-middleware```
 
+or
 
-## How to use
+```npm i redux-cookies-middleware --save```
 
-```
+## Usage
+
+```js
 import { applyMiddleware, createStore, compose } from 'redux';
 
 import reduxCookiesMiddleware from 'redux-cookies-middleware';
 import getStateWithCookies from 'redux-cookies-middleware/getStateWithCookies';
 
-// state to persist in cookies map
-const persistCookies = {
-    'data.token': { name: 'my_app_token' },
-    'session': { name: 'my_app_session' }
-};
-
 // initial state
-let preloadedState = {
-    auth: {
-        token: 'xxxx',
-        key: 'xxx'
-    },
-    session: 'xxx-xxx'
+let initialState = {
+  auth: {
+    token: 'xxxx',
+    key: 'xxx'
+  },
+  session: 'xxx-xxx'
 };
 
-// read stored cookies into store
-preloadedState = getStateWithCookies(preloadedState, persistCookies);
+// state to persist in cookies
+const paths = {
+  'auth.token': { name: 'my_app_token' },
+  'session': { name: 'my_app_session' }
+};
 
+// read stored data in cookies and merge it with the initial state
+initialState = getStateFromCookies(initialState, paths);
+
+// create store with data stored in cookies merged with the initial state
 const store = createStore(
-    reducer, 
-    preloadedState, 
-    applyMiddleware([
-        reduxCookiesMiddleware(persistCookies)
-    ])
+  reducer, 
+  initialState, 
+  applyMiddleware([
+    reduxCookiesMiddleware(paths)
+  ])
 );
 ```
 
+### `reduxCookiesMiddleware(paths, [, options])`
 
-## reduxCookiesMiddleware(persistCookies, customOptions)
+#### `paths`
+
+An object of parts of subsets to sync. Use dot-notation to specify the path of 
+the subsets of the store that has to be synced with cookies. Consider a store
+with the following shape as an example:
+
+```js
+{
+  auth: {
+    token: 'xxxx',
+    key: 'xxx'
+  },
+  session: 'xxx-xxx',
+  username: 'xxxxxxx'
+}
 
 ```
-const persistCookies = {
-    <path_to_state_in_store>: {
-        name: <cookie_name>,
-        equalityCheck,
-        deleteCheck
-    }
+
+To sync the auth `token` and `session` with cookies, pass the following `paths` object to the middleware:
+
+```js
+{
+  session: {
+    name: 'session'  // name of the cookie in which the value of session will be synced
+  },
+  'auth.token': {
+    name: 'auth_token'  // name of the cookie in which the value of auth.token will be synced
+  }
+}
+```
+
+Value of the path object is another object that takes more configuration options:
+
+| Property | Required | Type | Default | Description |
+|----------|----------|------|---------|-------------|
+| name | No | String | | Name of the cookie in which the part of the store should be synced. |
+| equalityCheck | No | Function | `options.defaultEqualityCheck` | A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is the value set for `options.defaultEqualityCheck`. |
+| deleteCheck | No | Function  | `options.defaultDeleteCheck` | A function to verify if the cookie should be deleted. Default value for this property is the value set for `options.defaultDeleteCheck`. |
+
+###### Example
+
+```js
+import isEqual from 'lodash.isequal';
+
+// initial state
+let initialState = {
+  auth: {
+    token: 'xxxx',
+    key: 'xxx'
+  },
+  session: 'xxx-xxx'
 };
+
+const paths = {
+  session: {
+    name: 'session'
+  },
+  'auth.token': {
+    name: 'auth_token',
+    equalityCheck: isEqual
+  }
+};
+
+// read stored cookies into store
+initialState = getStateFromCookies(initialState, persistCookies);
+
+const store = createStore(
+  reducer, 
+  initialState, 
+  applyMiddleware([
+    reduxCookiesMiddleware(path)
+  ])
+);
+
+```
+
+#### `options`
+
+An object of common options for the middleware.
+
+`options` object has the following properties:
+
+| Property | Required | Type | Default |
+|----------|----------|------|---------|
+| logger | No | Function | `console.error` |
+| setCookie | No | Function | A function that creates the cookie. |
+| defaultEqualityCheck | No | Function | A function that does shallow equality check. |
+| defaultDeleteCheck | No | Function | A function that performs undefined check. |
+
+Description of each property:
+* `logger(msg)`: This function can be used to capture errors occured inside `redux-cookies-middleware`. A good use-case for this could be to capture these errors and log them to Sentry or Errorception.
+* `setCookie(cookieName, cookieValue, [, expiryEpoch])`: A function that creates the cookie. Provide a custom cookie setting implementation. Use-cases of this are implementation of cookie versioning or using the common cookie setting logic in your application. You will have to use a custom implementation of [`getCookie`]() as well.
+  * `cookieName`: Name of the cookie.
+  * `cookieValue`: Value of the cookie.
+  * `expiryEpoch`: Expiry time of the cookie.
+* `defaultEqualityCheck`: A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is a function which does shallow comparison of two values using the `===` operator.
+  * This function has the following parameters:
+    * `oldVal`: Value of the part of the store before the reducers for a particular action execute.
+    * `newVal`: Value of the part of the store after the reducers for a particular action execute.
+  * Returns: `Boolean` - `true` if `oldVal` and `newVal` are equal.
+* `defaultDeleteCheck`: A function to verify if the cookie should be deleted. The default value for this property is a function that checks if the value is `undefined`.
+  * This function has the following parameters:
+    * `oldVal`: Value of the part of the store before the reducers for a particular action execute.
+    * `newVal`: Value of the part of the store after the reducers for a particular action execute.
+  * Returns: `Boolean` - `true` if the cookie should be deleted.
+
+##### Example
+
+```js
+import Raven from 'raven';
+
+const paths = { ... };
+
+const setCookie = () => {
+};
+
+const logger = msg => {
+  // Log to Sentry
+  Raven.captureException(msg);
+};
+
+const defaultEqualityCheck = lodash.isEqual;
+const defaultDeleteCheck = val => val === null;
 
 const customOptions = {
-    logger,
-    setCookie,
-    defaultEqualityCheck,
-    defaultDeleteCheck,
+  logger,
+  setCookie,
+  defaultEqualityCheck,
+  defaultDeleteCheck,
 };
 
-reduxCookiesMiddleware(persistCookies, customOptions);
+reduxCookiesMiddleware(paths, customOptions);
 ```
 
+### `getStateFromCookies(initialState, paths, [, getCookie])`
 
-## getStateWithCookies(preloadedState, persistCookies, [getCookie])
+`getStateFromCookies` can be used to hydrate the store with the data synced with the cookies. It basically takes `initialState`, reads the synced state from cookies and merges it with the initial state of your application.
 
-preloadedState
-* initial store state
+It returns the `initialState` merged with the state synced with cookies.
 
-getCookie
-* @type function(cookieName, [cookieString])
-* cookieString default value is ```document.cookie```.
+#### `initialState`
 
+`initialState` is the initial state object of your application.
 
-## persistCookies option
+#### `paths`
 
-path_to_state_in_store
-* is dot seprated state accessor eg. ```'data.ui.cart', 'data.auth.accessToken', 'data.cart' ...```
+`paths` is the configuration of paths to sync with cookies as used with [`reduxCookiesMiddleware`](#paths).
 
-name
-* @isMandatory
-* @type String
-* redux-cookies-middleware use this name as cookie name.
+#### `getCookie(cookieName)`
 
-equalityCheck
-* @type function(oldVal, newVal)
-* @return boolean true|false
-* redux-cookies-middleware use this to know equality condition else it will use defaultEqualityCheck.
+`getCookie()` is a function that reads a cookie. Provide a custom cookie reading implementation. Use-cases of this are implementation of cookie versioning or using the common cookie setting logic in your application. You would want to use it if you are using a custom implementation of `setCookie`.
 
-deleteCheck
-* @type function(value)
-* @return boolean true|false
-* redux-cookies-middleware use this to know delete condition else it will use defaultDeleteCheck.
-
-
-## custom options
-
-logger
-* @type function(message)
-* @default console.error
-* redux-cookies-middleware use this to tell error eg. 'state not found at store.getState().auth.accessToken'
-* you can use this function to capture errors occured inside redux-cookies-middleware & log then to sentry or any custom database.
-
-setCookie
-* @type function(cookieName, cookieValue, expiryEpoch)
-* @typeof cookieName String
-* @typeof cookieValue String
-* @typeof expiryEpoch Number
-* @default value of expiryEpoch is 365 * 24 * 60 * 60 * 1000 i.e. an year.
-* provide custom setCookie implementation when you want to control the versoning of cookies or having some custom set cookie implementation logic.
-* redux-cookies-middleware will call setCookie with 2 arguments to set a cookie. eg. ```setCookie('cookie_name', 'cookie_value')``` and will call with 3 arguments to delete cookie eg. ```setCookie('cookie_name', 'cookie_value', 0)```
-
-defaultEqualityCheck
-* @type function(oldVal, newVal)
-* @return boolean true|false
-* @default shallow comparision b/w oldVal & newVal.
-* redux-cookies-middleware use this to determine whether oldVal & newVal are equal you can use lodash.isEqual for deep comparison or you can write one of your own.
-
-defaultDeleteCheck
-* @type function(value)
-* @return boolean true|false
-* @default value should not be undefined
-* redux-cookies-middleware use this to determine when to delete some cookie.
-
+* Has the following parameters:
+  * `cookieName`: Name of the cookie to read
+* Returns: expected value of the part of the store synced with the cookie.
 
 ## How to Contribute
 
 1. ```yarn``` or ```npm install``` to install npm development dependencies.
-2. ```npm run build``` will compile source into dist.
+2. ```npm run build``` will compile the source into dist.
 3. ```npm run test``` will run the unit test suit.
 4. ```npm run lint``` will run eslint linting check.
-
 
 ## License
 
