@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 
-const getCookieByName = (cookieName, cookieString = document.cookie) => (
-    cookie.parse(cookieString)[cookieName]
+const getCookieByName = cookieName => (
+    cookie.parse(document.cookie)[cookieName]
 );
 
 const setCookie = (cookieName, cookieValue, expiryEpoch = (365 * 24 * 60 * 60 * 1000)) => {
