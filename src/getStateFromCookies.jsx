@@ -25,7 +25,7 @@ function pathSlicer(paths) {
  * @param {Object} get Cookie implementation
  * @return {Object} new state
  **/
-const getStateWithCookies = (
+const getStateFromCookies = (
     preloadedState,
     persistCookies,
     getCookie = getCookieByName
@@ -51,4 +51,4 @@ const getStateWithCookies = (
     return preloadedState;
 };
 
-export default getStateWithCookies;
+export default getStateFromCookies;

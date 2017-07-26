@@ -1,5 +1,5 @@
 import reduxCookiesMiddleware from './reduxCookiesMiddleware';
-import getStateWithCookies from './getStateWithCookies';
+import getStateFromCookies from './getStateFromCookies';
 
-export { getStateWithCookies };
+export { getStateFromCookies };
 export default reduxCookiesMiddleware;
