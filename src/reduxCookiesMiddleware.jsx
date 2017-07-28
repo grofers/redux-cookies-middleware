@@ -2,10 +2,10 @@ import setCookie from './cookiesApi';
 
 /**
  * Middleware to persist state in cookies.
- * @param {Object} statesToPersist
+ * @param {Object} paths
  * @param {Object} customOptions
  */
-const reduxCookiesMiddleware = (statesToPersist = {}, customOptions = {}) => {
+const reduxCookiesMiddleware = (paths = {}, customOptions = {}) => {
     const options = {
         logger: console.error,
         setCookie,
@@ -38,10 +38,10 @@ const reduxCookiesMiddleware = (statesToPersist = {}, customOptions = {}) => {
         const result = next(action);
         const nextState = store.getState();
 
-        Object.keys(statesToPersist).forEach(pathToState => {
+        Object.keys(paths).forEach(pathToState => {
             const prevVal = _getVal(prevState, pathToState);
             const nextVal = _getVal(nextState, pathToState);
-            const state = statesToPersist[pathToState];
+            const state = paths[pathToState];
             const equalityCheck = state.equalityCheck || options.defaultEqualityCheck;
             const deleteCheck = state.deleteCheck || options.defaultDeleteCheck;
 
