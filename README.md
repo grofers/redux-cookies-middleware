@@ -118,7 +118,7 @@ const store = createStore(
   reducer, 
   initialState, 
   applyMiddleware([
-    reduxCookiesMiddleware(path)
+    reduxCookiesMiddleware(paths)
   ])
 );
 
@@ -139,22 +139,25 @@ An object of common options for the middleware.
 
 Description of each property:
 * `logger(msg)`: This function can be used to capture errors occured inside `redux-cookies-middleware`. A good use-case for this could be to capture these errors and log them to Sentry or Errorception.
+  * This function has the following parameters:
+    * `msg`: Message you want to log with the help of this function.
 * `setCookie(cookieName, cookieValue, [, expiryEpoch])`: A function that creates the cookie. Provide a custom cookie setting implementation. Use-cases of this are implementation of cookie versioning or using the common cookie setting logic in your application. You will have to use a custom implementation of [`getCookie`]() as well.
-  * `cookieName`: Name of the cookie.
-  * `cookieValue`: Value of the cookie.
-  * `expiryEpoch`: Expiry time of the cookie.
-* `defaultEqualityCheck`: A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is a function which does shallow comparison of two values using the `===` operator.
+  * This function has the following parameters:
+    * `cookieName`: Name of the cookie.
+    * `cookieValue`: Value of the cookie.
+    * `expiryEpoch`: Expiry time of the cookie.
+* `defaultEqualityCheck(oldVal, newVal)`: A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is a function which does shallow comparison of two values using the `===` operator.
   * This function has the following parameters:
     * `oldVal`: Value of the part of the store before the reducers for a particular action execute.
     * `newVal`: Value of the part of the store after the reducers for a particular action execute.
   * Returns: `Boolean` - `true` if `oldVal` and `newVal` are equal.
-* `defaultDeleteCheck`: A function to verify if the cookie should be deleted. The default value for this property is a function that checks if the value is `undefined`.
+* `defaultDeleteCheck(oldVal, newVal)`: A function to verify if the cookie should be deleted. The default value for this property is a function that checks if the value is `undefined`.
   * This function has the following parameters:
     * `oldVal`: Value of the part of the store before the reducers for a particular action execute.
     * `newVal`: Value of the part of the store after the reducers for a particular action execute.
   * Returns: `Boolean` - `true` if the cookie should be deleted.
 
-##### Example
+###### Example
 
 ```js
 import Raven from 'raven';
@@ -199,17 +202,16 @@ It returns the `initialState` merged with the state synced with cookies.
 #### `getCookie(cookieName)`
 
 `getCookie()` is a function that reads a cookie. Provide a custom cookie reading implementation. Use-cases of this are implementation of cookie versioning or using the common cookie setting logic in your application. You would want to use it if you are using a custom implementation of `setCookie`.
-
-* Has the following parameters:
-  * `cookieName`: Name of the cookie to read
-* Returns: expected value of the part of the store synced with the cookie.
+  * This fucntion has the following parameters:
+    * `cookieName`: Name of the cookie to read
+  * Returns: expected value of the part of the store synced with the cookie.
 
 ## How to Contribute
 
 1. ```yarn``` or ```npm install``` to install npm development dependencies.
-2. ```npm run build``` will compile the source into dist.
-3. ```npm run test``` will run the unit test suit.
-4. ```npm run lint``` will run eslint linting check.
+2. ```yarn build``` or ```npm run build``` will compile the source into dist.
+3. ```yarn test``` or  ```npm run test``` will run the unit test suit.
+4. ```yarn lint``` or  ```npm run lint``` will run eslint linting check.
 
 ## License
 
