@@ -1,0 +1,7 @@
+language: node_js
+
+# test on different node.js versions
+node_js:
+  - 7
+  - 6
+  - 5
