@@ -16,7 +16,7 @@ or
 import { applyMiddleware, createStore, compose } from 'redux';
 
 import reduxCookiesMiddleware from 'redux-cookies-middleware';
-import getStateWithCookies from 'redux-cookies-middleware/getStateWithCookies';
+import getStateFromCookies from 'redux-cookies-middleware/getStateFromCookies';
 
 // initial state
 let initialState = {
