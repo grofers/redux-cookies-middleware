@@ -1,4 +1,4 @@
-import { getCookieByName } from './cookiesApi';
+import { getCookieByName } from './cookieApi';
 
 /**
  * return the node referenced by paths in state.
