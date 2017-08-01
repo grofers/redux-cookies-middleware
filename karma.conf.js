@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('karma-webpack');
 
 const webpackConfig = {
-    entry: './test/index.spec',
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'temp'),
         filename: 'index.js',
@@ -52,6 +52,7 @@ module.exports = function(config) {
             webpack,
             'karma-coverage',
             'karma-jasmine',
+            'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-sourcemap-loader',
         ],
@@ -59,7 +60,7 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         singleRun: true,
         concurrency: Infinity
     });
