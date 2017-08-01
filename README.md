@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/grofers/redux-cookies-middleware.svg?branch=master)](https://travis-ci.org/grofers/redux-cookies-middleware)
+
 # redux-cookies-middleware
 
 redux-cookies-middleware is a Redux middleware which watches for changes in Redux state &amp; stores them in browser cookie.
