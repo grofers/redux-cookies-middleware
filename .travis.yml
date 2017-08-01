@@ -5,3 +5,7 @@ node_js:
   - 7
   - 6
   - 5
+
+script:
+  - yarn run test
+  - yarn run coveralls
