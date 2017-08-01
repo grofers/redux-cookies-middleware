@@ -7,7 +7,7 @@ import { getCookie as getBrowserCookie } from './cookieApi';
  **/
 function pathSlicer(path) {
     const getSubtree = (subtree, key) => {
-        if (subtree && key.indexOf('.') > -1) {
+        if (key.indexOf('.') > -1) {
             const remaining = key.split('.').slice(1).join('.');
 
             return getSubtree(subtree[key.split('.')[0]], remaining);
@@ -32,18 +32,22 @@ const getStateFromCookies = (
 ) => {
     Object.keys(paths).forEach(pathToState => {
         const pathConf = paths[pathToState];
+        const pathSplit = pathToState.split('.');
+        const terminalKey = pathSplit.slice(-1);
 
         // read cookies
         const storedState = getCookie(pathConf.name);
 
         // get a slice of state path where to put cookie value
-        const stateTree = pathSlicer(pathToState)(preloadedState);
+        const stateTree = pathSplit.length > 1 ? (
+            pathSlicer(pathSplit.slice(0, -1).join('.'))(preloadedState)
+        ) : preloadedState;
 
         if (storedState) {
             try {
-                Object.assign(stateTree, JSON.parse(storedState));
+                stateTree[terminalKey] = JSON.parse(storedState);
             } catch (err) {
-                console.error(`Error while parsing cookie ${pathConf.name}.`);
+                console.error(`Unable to set state from cookie at ${pathConf.name}. Error: `, err);
             }
         }
     });
