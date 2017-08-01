@@ -1,6 +1,6 @@
 {
   "name": "redux-cookies-middleware",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "redux-cookies-middleware is a redux middleware which watches for changes in redux state & store them to browser cookie.",
   "keywords": [
     "redux",
@@ -15,7 +15,10 @@
     "email": "veeteshjain@gmail.com"
   },
   "license": "MIT",
-  "author": "VeeteshJain <veeteshjain@gmail.com> (https://github.com/VeeteshJain)",
+  "author": "Grofers Engineering (https://github.com/grofers)",
+  "contributors": [
+    "Veetesh Jain <veeteshjain@gmail.com> (https://github.com/VeeteshJain)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/grofers/redux-cookies-middleware.git"
