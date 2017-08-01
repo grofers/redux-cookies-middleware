@@ -83,7 +83,7 @@ Value of the path object is another object that takes more configuration options
 
 | Property | Required | Type | Default | Description |
 |----------|----------|------|---------|-------------|
-| name | No | String | | Name of the cookie in which the part of the store should be synced. |
+| name | Yes | String | | Name of the cookie in which the part of the store should be synced. |
 | equalityCheck | No | Function | `options.defaultEqualityCheck` | A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is the value set for `options.defaultEqualityCheck`. |
 | deleteCheck | No | Function  | `options.defaultDeleteCheck` | A function to verify if the cookie should be deleted. Default value for this property is the value set for `options.defaultDeleteCheck`. |
 
@@ -164,7 +164,8 @@ import Raven from 'raven';
 
 const paths = { ... };
 
-const setCookie = () => {
+const setCookie = (name, value) => {
+  // Add your custom implementation for setting cookie
 };
 
 const logger = msg => {
@@ -205,6 +206,68 @@ It returns the `initialState` merged with the state synced with cookies.
   * This fucntion has the following parameters:
     * `name`: Name of the cookie to read
   * Returns: expected value of the part of the store synced with the cookie.
+
+## Server-Side Rendering Example
+
+While using `redux-cookies-middleware` with server-side rendering, we will have to override the default implementation of `getCookie` and `setCookie` functions to be able to read from cookie headers and send appropriate `Set-Cookie` headers to the browser.
+
+Consider this detailed example:
+
+```js
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import { applyMiddleware, createStore, compose } from 'redux';
+
+import reduxCookiesMiddleware from 'redux-cookies-middleware';
+import getStateFromCookies from 'redux-cookies-middleware/getStateFromCookies';
+
+// state to persist in cookies
+const paths = {
+  'auth.token': { name: 'my_app_token' },
+  'session': { name: 'my_app_session' }
+};
+
+// reads a cookie from the express request object.
+const getCookieOnServer = (req, name) = req.cookies[name];
+
+// sets cookie using the express response object.
+const setCookieOnServer = (res, name, value) => {
+  res.cookie(name, value);
+};
+
+const app = express();
+app.use(cookieParser());  // required to parse cookie headers into a Javascript object
+
+app.get('/', (req, res) => {
+  // initial state
+  let initialState = {
+    auth: {
+      token: 'xxxx',
+      key: 'xxx'
+    },
+    session: 'xxx-xxx'
+  };
+
+  // read stored data in cookies and merge it with the initial state
+  initialState = getStateFromCookies(initialState, paths, (name, value) => getCookieOnServer(req, name));
+
+  // create store with data stored in cookies merged with the initial state
+  const store = createStore(
+    reducer, 
+    initialState, 
+    applyMiddleware([
+      reduxCookiesMiddleware(
+        paths,
+        {
+          setCookie: (name, value) => setCookieOnServer(res, name, value)
+        }
+      )
+    ])
+  );
+  
+  res.send('Hello world!');
+});
+```
 
 ## How to Contribute
 
