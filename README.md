@@ -199,11 +199,11 @@ It returns the `initialState` merged with the state synced with cookies.
 
 `paths` is the configuration of paths to sync with cookies as used with [`reduxCookiesMiddleware`](#paths).
 
-#### `getCookie(cookieName)`
+#### `getCookie(name)`
 
 `getCookie()` is a function that reads a cookie. Provide a custom cookie reading implementation. Use-cases of this are implementation of cookie versioning or using the common cookie setting logic in your application. You would want to use it if you are using a custom implementation of `setCookie`.
   * This fucntion has the following parameters:
-    * `cookieName`: Name of the cookie to read
+    * `name`: Name of the cookie to read
   * Returns: expected value of the part of the store synced with the cookie.
 
 ## How to Contribute

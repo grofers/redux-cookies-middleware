@@ -1,11 +1,11 @@
 import { getCookie as getBrowserCookie } from './cookieApi';
 
 /**
- * return the node referenced by paths in state.
- * @param {Object} paths
+ * return the node referenced by path in state.
+ * @param {Object} path
  * @return {Object} node reference
  **/
-function pathSlicer(paths) {
+function pathSlicer(path) {
     const getSubtree = (subtree, key) => {
         if (key.indexOf('.') > -1) {
             const remaining = key.split('.').slice(1).join('.');
@@ -15,35 +15,39 @@ function pathSlicer(paths) {
         return subtree[key];
     };
 
-    return (state) => getSubtree(state, paths);
+    return (state) => getSubtree(state, path);
 }
 
 /**
  * read browser cookie into state
  * @param {Object} preloaded state
- * @param {Object} persistCookies
+ * @param {Object} paths
  * @param {Object} get Cookie implementation
  * @return {Object} new state
  **/
 const getStateFromCookies = (
     preloadedState,
-    persistCookies,
+    paths,
     getCookie = getBrowserCookie
 ) => {
-    Object.keys(persistCookies).forEach(pathToState => {
-        const persistCookie = persistCookies[pathToState];
+    Object.keys(paths).forEach(pathToState => {
+        const pathConf = paths[pathToState];
+        const pathSplit = pathToState.split('.');
+        const terminalKey = pathSplit.slice(-1);
 
         // read cookies
-        const storedState = getCookie(persistCookie.name);
+        const storedState = getCookie(pathConf.name);
 
         // get a slice of state path where to put cookie value
-        const stateTree = pathSlicer(pathToState)(preloadedState);
+        const stateTree = pathSplit.length > 1 ? (
+            pathSlicer(pathSplit.slice(0, -1).join('.'))(preloadedState)
+        ) : preloadedState;
 
         if (storedState) {
             try {
-                Object.assign(stateTree, JSON.parse(storedState));
+                stateTree[terminalKey] = JSON.parse(storedState);
             } catch (err) {
-                console.error(`error while parsing cookie ${persistCookie.name}.`);
+                console.error(`Unable to set state from cookie at ${pathConf.name}. Error: `, err);
             }
         }
     });
