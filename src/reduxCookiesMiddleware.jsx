@@ -1,4 +1,4 @@
-import setCookie from './cookiesApi';
+import setCookie from './cookieApi';
 
 /**
  * Middleware to persist state in cookies.

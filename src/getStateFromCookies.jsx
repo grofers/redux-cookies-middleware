@@ -1,4 +1,4 @@
-import { getCookieByName } from './cookiesApi';
+import { getCookie as getBrowserCookie } from './cookieApi';
 
 /**
  * return the node referenced by paths in state.
@@ -28,7 +28,7 @@ function pathSlicer(paths) {
 const getStateFromCookies = (
     preloadedState,
     persistCookies,
-    getCookie = getCookieByName
+    getCookie = getBrowserCookie
 ) => {
     Object.keys(persistCookies).forEach(pathToState => {
         const persistCookie = persistCookies[pathToState];
