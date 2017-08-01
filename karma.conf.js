@@ -50,18 +50,15 @@ module.exports = function(config) {
         webpack: webpackConfig,
         plugins: [
             webpack,
-            'karma-chrome-launcher',
             'karma-coverage',
             'karma-jasmine',
-            'karma-phantomjs-launcher',
+            'karma-chrome-launcher',
             'karma-sourcemap-loader',
         ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
-        // start these browsers
-        // Chrome PhantomJS
         browsers: ['Chrome'],
         singleRun: true,
         concurrency: Infinity
