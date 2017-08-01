@@ -48,7 +48,7 @@ const store = createStore(
 );
 ```
 
-### `reduxCookiesMiddleware(paths, [, options])`
+### `reduxCookiesMiddleware(paths[, options])`
 
 #### `paths`
 
@@ -188,7 +188,7 @@ const customOptions = {
 reduxCookiesMiddleware(paths, customOptions);
 ```
 
-### `getStateFromCookies(initialState, paths, [, getCookie])`
+### `getStateFromCookies(initialState, paths[, getCookie])`
 
 `getStateFromCookies` can be used to hydrate the store with the data synced with the cookies. It basically takes `initialState`, reads the synced state from cookies and merges it with the initial state of your application.
 
