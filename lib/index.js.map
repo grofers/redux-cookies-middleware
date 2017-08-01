@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.js"],"names":["getStateFromCookies"],"mappings":";;;;;;;AAAA;;;;AACA;;;;;;QAESA,mB","file":"index.js","sourcesContent":["import reduxCookiesMiddleware from './reduxCookiesMiddleware';\nimport getStateFromCookies from './getStateFromCookies';\n\nexport { getStateFromCookies };\nexport default reduxCookiesMiddleware;\n"]}
