@@ -8,7 +8,7 @@
     "middleware",
     "react"
   ],
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "homepage": "https://github.com/grofers/redux-cookies-middleware",
   "bugs": {
     "url": "https://github.com/grofers/redux-cookies-middleware/issues",
@@ -24,11 +24,11 @@
     "url": "https://github.com/grofers/redux-cookies-middleware.git"
   },
   "scripts": {
-    "clear:dist": "rm -rf dist && mkdir dist",
-    "build": "npm run clear:dist && babel src --out-dir dist --source-maps",
+    "clear:lib": "rm -rf lib && mkdir lib",
+    "build": "npm run clear:lib && babel src --out-dir lib --source-maps",
     "postinstall": "npm run build",
     "test": "karma start karma.conf.js --log-level debug",
-    "lint": "eslint . --ext .js --ext .jsx -f node_modules/eslint-detailed-reporter/lib/detailed.js -o ./eslint/report.html"
+    "lint": "eslint . --ext .js -f node_modules/eslint-detailed-reporter/lib/detailed.js -o ./eslint/report.html"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -40,7 +40,6 @@
     "eslint-detailed-reporter": "^0.7.2",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-import": "^1.14.0",
-    "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.2",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
