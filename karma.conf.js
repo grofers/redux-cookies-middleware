@@ -1,68 +1,55 @@
-const path = require('path');
-const webpack = require('karma-webpack');
+var path = require('path');
 
-const webpackConfig = {
-    entry: './src/index.js',
-    output: {
-        path: path.resolve(__dirname, 'temp'),
-        filename: 'index.js',
-        publicPath: '/',
-        libraryTarget: 'umd'
-    },
-    module: {
-        rules: [{
-            test: /\.jsx?$/,
-            exclude: [/node_modules/],
-            loader: 'babel-loader',
-            options: {
-                presets: ['es2015', 'stage-0']
-            }
-        }]
-    },
-    plugins: [],
-    resolve: {
-        modules: ['node_modules'],
-        extensions: ['.js', '.jsx']
-    },
-    devtool: 'inline-source-map',
-    context: __dirname,
-    target: 'web'
-};
+module.exports = function (config) {
+    var coverageLoaders = [];
 
-module.exports = function(config) {
     config.set({
-        basePath: '.',
-        frameworks: ['jasmine'],
-        files: [
-            'src/**/*',
-            'test/**/*'
-        ],
-        exclude: [],
-        preprocessors: {
-            'src/**/*': ['webpack', 'sourcemap', 'coverage'],
-            'test/**/*': ['webpack', 'sourcemap']
-        },
+        browsers: [ 'PhantomJS' ],
+        frameworks: [ 'jasmine' ],
         reporters: ['progress', 'coverage'],
+
+        files: [
+            'test/*.js'
+        ],
+
+        preprocessors: {
+            'src/*.js': [ 'webpack', 'coverage' ],
+            'test/*.js': [ 'webpack' ]
+        },
+
+        singleRun: true,
+
+        webpack: {
+            devtool: 'inline-source-map',
+            module: {
+                rules: [
+                    {
+                        test: /\.js$/,
+                        enforce: "pre",
+                        use: 'babel-loader',
+                        include: [
+                            path.resolve('src/'),
+                            path.resolve('test/')
+                        ]
+                    },
+                    {
+                        test: /\.js$/,
+                        include: path.resolve('src/'),
+                        exclude: [/node_modules/],
+                        loader: 'istanbul-instrumenter-loader'
+                    }
+                ]
+            }
+        },
+
+        webpackServer: {
+            noInfo: true
+        },
+
         coverageReporter: {
             type: 'lcov',
             dir: 'coverage/',
             subdir: '.'
-        },
-        webpack: webpackConfig,
-        plugins: [
-            webpack,
-            'karma-coverage',
-            'karma-jasmine',
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher',
-            'karma-sourcemap-loader',
-        ],
-        port: 9876,
-        colors: true,
-        logLevel: config.LOG_INFO,
-        autoWatch: false,
-        browsers: ['PhantomJS'],
-        singleRun: true,
-        concurrency: Infinity
-    });
+        }
+    })
 }
