@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/grofers/redux-cookies-middleware.svg?branch=master)](https://travis-ci.org/grofers/redux-cookies-middleware)
 [![Coverage Status](https://coveralls.io/repos/github/grofers/redux-cookies-middleware/badge.svg?branch=master)](https://coveralls.io/github/grofers/redux-cookies-middleware?branch=master)
-[![Code Climate](https://codeclimate.com/github/codeclimate/codeclimate/badges/gpa.svg)](https://codeclimate.com/github/codeclimate/codeclimate)
+[![Code Climate](https://codeclimate.com/github/grofers/redux-cookies-middleware/badges/gpa.svg)](https://codeclimate.com/github/grofers/redux-cookies-middleware)
 [![NPM Package](https://badge.fury.io/js/redux-cookies-middleware.svg)](https://www.npmjs.org/package/redux-cookies-middleware)
 
 # redux-cookies-middleware
