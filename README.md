@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/grofers/redux-cookies-middleware.svg?branch=master)](https://travis-ci.org/grofers/redux-cookies-middleware)
+[![Coverage Status](https://coveralls.io/repos/github/grofers/redux-cookies-middleware/badge.svg?branch=master)](https://coveralls.io/github/grofers/redux-cookies-middleware?branch=master)
+[![NPM Package](https://img.shields.io/npm/v/reselect.svg?style=flat-square)](https://www.npmjs.org/package/redux-cookies-middleware)
 
 # redux-cookies-middleware
 
@@ -48,7 +50,7 @@ const store = createStore(
 );
 ```
 
-### `reduxCookiesMiddleware(paths, [, options])`
+### `reduxCookiesMiddleware(paths[, options])`
 
 #### `paths`
 
@@ -188,7 +190,7 @@ const customOptions = {
 reduxCookiesMiddleware(paths, customOptions);
 ```
 
-### `getStateFromCookies(initialState, paths, [, getCookie])`
+### `getStateFromCookies(initialState, paths[, getCookie])`
 
 `getStateFromCookies` can be used to hydrate the store with the data synced with the cookies. It basically takes `initialState`, reads the synced state from cookies and merges it with the initial state of your application.
 
