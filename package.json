@@ -1,6 +1,6 @@
 {
   "name": "redux-cookies-middleware",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "redux-cookies-middleware is a redux middleware which watches for changes in redux state & store them to browser cookie.",
   "keywords": [
     "redux",
