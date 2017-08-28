@@ -9,7 +9,6 @@ groups:
     reset_on_push:
       enabled: true
     users:
-    - VeeteshJain
     - dash1291
     - vaidik
     - amanmehta25
