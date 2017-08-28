@@ -233,7 +233,7 @@ const paths = {
 };
 
 // reads a cookie from the express request object.
-const getCookieOnServer = (req, name) = req.cookies[name];
+const getCookieOnServer = (req, name) => req.cookies[name];
 
 // sets cookie using the express response object.
 const setCookieOnServer = (res, name, value) => {
