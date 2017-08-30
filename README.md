@@ -150,8 +150,8 @@ Description of each property:
   * This function has the following parameters:
     * `name`: Name of the cookie.
     * `value`: Value of the cookie.
-    * `expiry`: Expiry time (in days) of the cookie. Default: 365 days (optional).
-    * `secure`: Either true or false, indicating if the cookie transmission requires a secure protocol (https). Default: false (optional).
+    * `expiry` (optional): Expiry time (in days) of the cookie. Default: 365 days.
+    * `secure` (optional): Either true or false, indicating if the cookie transmission requires a secure protocol (https). Default: false.
 * `defaultEqualityCheck(oldVal, newVal)`: A function to verify if the value before an action is dispatched and after the action is dispatched is equal or not. If the values are equal, the part of the store is not synced with the cookie. This is just to avoid setting cookies again and again if the value of that part of the store has not changed. You can set a custom equality check for every part of the store you want to sync with the cookies. Default value for this property is a function which does shallow comparison of two values using the `===` operator.
   * This function has the following parameters:
     * `oldVal`: Value of the part of the store before the reducers for a particular action execute.
