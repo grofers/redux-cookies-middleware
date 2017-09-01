@@ -26,7 +26,6 @@
   "scripts": {
     "clear:lib": "rimraf -rf lib && mkdir lib",
     "build": "npm run clear:lib && babel src --out-dir lib --source-maps",
-    "postinstall": "npm run build",
     "test": "karma start karma.conf.js --log-level debug",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test:dev": "karma start karma.conf.js --log-level debug --browsers Chrome --no-single-run",
