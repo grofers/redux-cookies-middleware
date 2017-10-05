@@ -4,7 +4,7 @@ import { getCookie as getBrowserCookie } from './cookieApi';
  * return the node referenced by path in state.
  * @param {Object} path
  * @return {Object} node reference
- **/
+ */
 function pathSlicer(path) {
     const getSubtree = (subtree, key) => {
         if (key.indexOf('.') > -1) {
@@ -15,7 +15,7 @@ function pathSlicer(path) {
         return subtree[key];
     };
 
-    return (state) => getSubtree(state, path);
+    return state => getSubtree(state, path);
 }
 
 /**
@@ -24,13 +24,13 @@ function pathSlicer(path) {
  * @param {Object} paths
  * @param {Object} get Cookie implementation
  * @return {Object} new state
- **/
+ */
 const getStateFromCookies = (
     preloadedState,
     paths,
     getCookie = getBrowserCookie
 ) => {
-    Object.keys(paths).forEach(pathToState => {
+    Object.keys(paths).forEach((pathToState) => {
         const pathConf = paths[pathToState];
         const pathSplit = pathToState.split('.');
         const terminalKey = pathSplit.slice(-1);

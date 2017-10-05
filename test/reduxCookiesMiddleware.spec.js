@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { applyMiddleware, createStore, compose, combineReducers } from 'redux';
 
 import reduxCookiesMiddleware from '../src';
 
-const setAuthToken = (authToken) => ({
+const setAuthToken = authToken => ({
     type: 'SET_AUTH_TOKEN',
     authToken
 });
@@ -29,11 +30,7 @@ const getStore = (preloadedState = {}, persistentCookies, options) => {
     const store = createStore(
         reducers,
         preloadedState,
-        compose(
-            applyMiddleware(
-                reduxCookiesMiddleware(persistentCookies, options)
-            )
-        )
+        compose(applyMiddleware(reduxCookiesMiddleware(persistentCookies, options)))
     );
 
     return store;
