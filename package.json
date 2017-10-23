@@ -24,7 +24,7 @@
     "url": "https://github.com/grofers/redux-cookies-middleware.git"
   },
   "scripts": {
-    "clear:lib": "rimraf -rf lib && mkdir lib",
+    "clear:lib": "rimraf lib",
     "build": "npm run clear:lib && babel src --out-dir lib --source-maps",
     "test": "karma start karma.conf.js --log-level debug",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
