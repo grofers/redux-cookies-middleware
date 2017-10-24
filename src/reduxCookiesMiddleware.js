@@ -10,7 +10,7 @@ const reduxCookiesMiddleware = (paths = {}, customOptions = {}) => {
         logger: console.error,
         setCookie,
         defaultEqualityCheck: (a, b) => (a === b),
-        defaultDeleteCheck: (value) => (typeof value === 'undefined'),
+        defaultDeleteCheck: value => (typeof value === 'undefined'),
         ...customOptions
     };
 
@@ -19,7 +19,7 @@ const reduxCookiesMiddleware = (paths = {}, customOptions = {}) => {
         let value = state;
         let index;
 
-        for (index = 0; index < pathPartsList.length; index++) {
+        for (index = 0; index < pathPartsList.length; index += 1) {
             const pathPart = pathPartsList[index];
 
             if (Object.hasOwnProperty.call(value, pathPart)) {
@@ -33,12 +33,12 @@ const reduxCookiesMiddleware = (paths = {}, customOptions = {}) => {
         return (index === pathPartsList.length) ? value : null;
     };
 
-    return store => next => action => {
+    return store => next => (action) => {
         const prevState = store.getState();
         const result = next(action);
         const nextState = store.getState();
 
-        Object.keys(paths).forEach(pathToState => {
+        Object.keys(paths).forEach((pathToState) => {
             const prevVal = _getVal(prevState, pathToState);
             const nextVal = _getVal(nextState, pathToState);
             const state = paths[pathToState];
