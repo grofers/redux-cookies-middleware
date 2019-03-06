@@ -46,8 +46,8 @@ const getStateFromCookies = (
         if (storedState) {
             try {
                 stateTree[terminalKey] = JSON.parse(storedState);
-            } catch (err) {
-                console.error(`Unable to set state from cookie at ${pathConf.name}. Error: `, err);
+            } catch (_) {
+                stateTree[terminalKey] = storedState;
             }
         }
     });

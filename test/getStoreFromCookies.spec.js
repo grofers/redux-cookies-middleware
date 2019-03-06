@@ -63,4 +63,26 @@ describe('getStateFromCookies', () => {
 
         expect(getCookie).toHaveBeenCalledWith('userId');
     });
+
+    it('should read non JSON values from cookie', () => {
+        jsCookie.set('authToken', authToken);
+        jsCookie.set('userId', userId);
+        jsCookie.set('geolocation', null);
+        const paths = {
+            userId: { name: 'userId' },
+            geolocation: { name: 'geolocation' },
+            'auth.authToken': { name: 'authToken' },
+        };
+        initialState = {
+            userId: null,
+            auth: {
+                authToken: null
+            },
+            geolocation: null
+        };
+        const value = getStateFromCookies(initialState, paths);
+        expect(value.auth.authToken).toEqual(authToken);
+        expect(value.userId).toEqual(userId);
+        expect(value.geolocation).toEqual(null);
+    });
 });
