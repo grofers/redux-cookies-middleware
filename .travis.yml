@@ -2,9 +2,9 @@ language: node_js
 
 # test on different node.js versions
 node_js:
-  - 7
+  - 10
+  - 8
   - 6
-  - 5
 
 script:
   - yarn run test
