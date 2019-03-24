@@ -1,22 +1,31 @@
 import { getCookie as getBrowserCookie } from './cookieApi';
 
 /**
- * return the node referenced by path in state.
- * @param {Object} path
- * @return {Object} node reference
+ * safely get cookies
+ * @param {Function} getCookie
+ * @param {String} cookieName
+ * @return {any} cookieValue
  */
-function pathSlicer(path) {
-    const getSubtree = (subtree, key) => {
-        if (key.indexOf('.') > -1) {
-            const remaining = key.split('.').slice(1).join('.');
+const safeGetCookie = (getCookie, cookieName) => {
+    try {
+        return JSON.parse(getCookie(cookieName));
+    } catch (_) {
+        return getCookie(cookieName);
+    }
+};
 
-            return getSubtree(subtree[key.split('.')[0]], remaining);
-        }
-        return subtree[key];
-    };
-
-    return state => getSubtree(state, path);
-}
+/**
+ * get State Object from Path String
+ * @param {String} path
+ * @param {any} valueFromCookie
+ * @return {Object} new state
+ */
+const getStateFromPath = (path, valueFromCookie) => {
+    const pathSplit = path.split('.');
+    return pathSplit.reverse()
+        .reduce((finalPathState, currPathKey) =>
+            ({ [currPathKey]: finalPathState }), valueFromCookie);
+};
 
 /**
  * read browser cookie into state
@@ -26,33 +35,17 @@ function pathSlicer(path) {
  * @return {Object} new state
  */
 const getStateFromCookies = (
-    preloadedState,
+    preloadedState = {},
     paths,
     getCookie = getBrowserCookie
 ) => {
-    Object.keys(paths).forEach((pathToState) => {
-        const pathConf = paths[pathToState];
-        const pathSplit = pathToState.split('.');
-        const terminalKey = pathSplit.slice(-1);
-
-        // read cookies
-        const storedState = getCookie(pathConf.name);
-
-        // get a slice of state path where to put cookie value
-        const stateTree = pathSplit.length > 1 ? (
-            pathSlicer(pathSplit.slice(0, -1).join('.'))(preloadedState)
-        ) : preloadedState;
-
-        if (storedState) {
-            try {
-                stateTree[terminalKey] = JSON.parse(storedState);
-            } catch (err) {
-                console.error(`Unable to set state from cookie at ${pathConf.name}. Error: `, err);
-            }
-        }
+    const pathStates = Object.keys(paths).map((path) => {
+        const pathConfig = paths[path];
+        const valueFromCookie = safeGetCookie(getCookie, pathConfig.name);
+        return getStateFromPath(path, valueFromCookie);
     });
-
-    return preloadedState;
+    return pathStates
+        .reduce((finalState, pathState) => ({ ...finalState, ...pathState }), preloadedState);
 };
 
 export default getStateFromCookies;
