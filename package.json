@@ -57,6 +57,8 @@
     "webpack": "^3.3.0"
   },
   "dependencies": {
-    "js-cookie": "^2.1.4"
+    "js-cookie": "^2.1.4",
+    "fstream": "^1.0.12",
+    "tar": "^2.0.0"
   }
 }
