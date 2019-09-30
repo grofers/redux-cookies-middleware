@@ -57,6 +57,7 @@
     "webpack": "^3.3.0"
   },
   "dependencies": {
-    "js-cookie": "^2.1.4"
+    "js-cookie": "^2.1.4",
+    "lodash": "^4.17.15"
   }
 }
