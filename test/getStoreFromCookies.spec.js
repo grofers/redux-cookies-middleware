@@ -5,6 +5,7 @@ import { getStateFromCookies } from '../src';
 describe('getStateFromCookies', () => {
     const userId = 1;
     const authToken = 'xxxxx';
+    const key = 'xxx';
     const geolocation = {
         lat: 12.34,
         lon: 56.78
@@ -23,7 +24,8 @@ describe('getStateFromCookies', () => {
         initialState = {
             userId: null,
             auth: {
-                authToken: null
+                authToken: null,
+                key: null
             },
             geolocation: {},
             ui: {
@@ -33,6 +35,7 @@ describe('getStateFromCookies', () => {
 
         jsCookie.set('userId', JSON.stringify(userId));
         jsCookie.set('authToken', JSON.stringify(authToken));
+        jsCookie.set('key', JSON.stringify(key));
         jsCookie.set('geolocation', JSON.stringify(geolocation));
         jsCookie.set('checkout', JSON.stringify(checkout));
     });
@@ -42,6 +45,7 @@ describe('getStateFromCookies', () => {
             userId: { name: 'userId' },
             geolocation: { name: 'geolocation' },
             'auth.authToken': { name: 'authToken' },
+            'auth.key': { name: 'key' },
             'ui.checkout': { name: 'checkout' }
         };
 
@@ -50,6 +54,7 @@ describe('getStateFromCookies', () => {
         // expectations
         expect(value.userId).toEqual(userId);
         expect(value.auth.authToken).toEqual(authToken);
+        expect(value.auth.key).toEqual(key);
         expect(value.geolocation).toEqual(geolocation);
         expect(value.ui.checkout).toEqual(checkout);
     });

@@ -1,3 +1,4 @@
+import merge from 'lodash/merge';
 import { getCookie as getBrowserCookie } from './cookieApi';
 
 /**
@@ -45,7 +46,7 @@ const getStateFromCookies = (
         return getStateFromPath(path, valueFromCookie);
     });
     return pathStates
-        .reduce((finalState, pathState) => ({ ...finalState, ...pathState }), preloadedState);
+        .reduce((finalState, pathState) => (merge({}, finalState, pathState)), preloadedState);
 };
 
 export default getStateFromCookies;
